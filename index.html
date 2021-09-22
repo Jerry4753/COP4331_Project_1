@@ -1,0 +1,604 @@
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!--Script link-->
+  <script type="text/javascript" src="js/md5.js"></script>
+  <title>Contact Manager</title>
+  <!-- Bootstrap -->
+  <link href="css/bootstrap.min.css" rel="stylesheet" />
+  <link href="css/custom.css" rel="stylesheet" />
+</head>
+
+<div id="loginDiv">
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4"></div>
+  </div>
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+      <form class="" action="" method="post">
+        <div class="form-group">
+          <label for="usr">Username:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="loginName"
+            placeholder="Enter username"
+            name="usr"
+          />
+        </div>
+        <div class="form-group">
+          <label for="pwd">Password:</label>
+          <input
+            type="password"
+            class="form-control"
+            id="loginPassword"
+            placeholder="Enter password"
+            name="pswd"
+          />
+        </div>
+        <button
+          type="button"
+          name="login"
+          class="btn btn-primary"
+          onclick="loginCheck()"
+        >
+          Log In
+        </button>
+        <button
+          type="button"
+          name="new"
+          class="btn btn-success"
+          onclick="goToSignup()"
+        >
+          New User
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+<div id="signupDiv" style="display: none">
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4"></div>
+  </div>
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+      <form class="" action="" method="post">
+        <div class="form-group">
+          <label for="usr">Username:</label>
+          <input
+            type="text"
+            onfocus="this.value=''"
+            class="form-control"
+            id="signupName"
+            placeholder="Enter username"
+            name="usr"
+          />
+        </div>
+        <div class="form-group">
+          <label for="pwd">Password:</label>
+          <input
+            type="password"
+            onfocus="this.value=''"
+            class="form-control"
+            id="signupPassword"
+            placeholder="Enter password"
+            name="pswd"
+          />
+        </div>
+        <div class="form-group">
+          <label for="confirmpswd">Confirm Password:</label>
+          <input
+            type="password"
+            onfocus="this.value=''"
+            class="form-control"
+            id="confirmPassword"
+            placeholder="Re-enter password"
+            name="confirmpswd"
+          />
+        </div>
+        <button
+          type="button"
+          name="Cancel"
+          class="btn btn-danger"
+          onclick="goToLogin()"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          name="Signup"
+          class="btn btn-success"
+          onclick="signupCheck()"
+        >
+          Sign Up
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+<div id="loggedInDiv" style="display: none">
+  <body>
+    <!-- navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button
+            type="button"
+            class="navbar-toggle collapsed"
+            data-toggle="collapse"
+            data-target="#navbar-collapse"
+            aria-expanded="false"
+          >
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+
+          <a
+            class="navbar-brand text-uppercase"
+            onclick="hideOrShow('loggedInDiv', true);hideOrShow('addContactDiv', false);"
+          >
+            Contech
+          </a>
+        </div>
+        <!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+          <div class="nav navbar-right navbar-btn">
+            <a href="" class="btn btn-danger" onclick="doLogout();">
+              Log Out
+            </a>
+          </div>
+          <div
+            class="nav navbar-right navbar-btn"
+            onclick="hideOrShow('addContactDiv', true);hideOrShow('loggedInDiv', false)"
+          >
+            <a class="btn btn-default">
+              <i class="glyphicon glyphicon-plus"></i>
+              Add Contact
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- content -->
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="name" class="control-label col-md-3">Name</label>
+            <div class="col-md-8">
+              <input
+                type="text"
+                name="name"
+                id="nameSearch"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="name" class="control-label col-md-3">Email</label>
+            <div class="col-md-8">
+              <input
+                type="text"
+                name="name"
+                id="emailSearch"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="name" class="control-label col-md-3">Phone</label>
+            <div class="col-md-8">
+              <input
+                type="text"
+                name="name"
+                id="phoneSearch"
+                class="form-control"
+              />
+            </div>
+          </div>
+          <div class="col-md-offset-8">
+            <button
+              type="button"
+              name="button"
+              class="btn btn-primary"
+              onclick="searchContact()"
+            >
+              Search
+            </button>
+          </div>
+          <div class="col-md-3" id="searchResults"></div>
+        </div>
+
+        <div class="col-md-8">
+          <div class="panel panel-default">
+            <table class="table">
+              <tr id="contact1" style="display: none">
+                <td class="middle">
+                  <div class="media">
+                    <div class="col-md-2"></div>
+                    <div class="media-body">
+                      <h4 class="media-heading" id="name1">Contact 1</h4>
+                      <address id="email1">contact1@sample.com</address>
+                      <div id="phone1">1234567</div>
+                    </div>
+                  </div>
+                </td>
+                <td width="100" class="middle">
+                  <div>
+                    <a
+                      onclick="deleteContact(1)"
+                      class="btn btn-circle btn-danger btn-xs"
+                      title="Delete"
+                    >
+                      <i class="glyphicon glyphicon-remove"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr id="contact2" style="display: none">
+                <td class="middle">
+                  <div class="media">
+                    <div class="col-md-2"></div>
+                    <div class="media-body">
+                      <h4 class="media-heading" id="name2">Contact 1</h4>
+                      <address id="email2">contact1@sample.com</address>
+                      <div id="phone2">1234567</div>
+                    </div>
+                  </div>
+                </td>
+                <td width="100" class="middle">
+                  <div>
+                    <a
+                      onclick="deleteContact(2)"
+                      class="btn btn-circle btn-danger btn-xs"
+                      title="Delete"
+                    >
+                      <i class="glyphicon glyphicon-remove"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr id="contact3" style="display: none">
+                <td class="middle">
+                  <div class="media">
+                    <div class="col-md-2"></div>
+                    <div class="media-body">
+                      <h4 class="media-heading" id="name3">Contact 1</h4>
+                      <address id="email3">contact1@sample.com</address>
+                      <div id="phone3">1234567</div>
+                    </div>
+                  </div>
+                </td>
+                <td width="100" class="middle">
+                  <div>
+                    <a
+                      onclick="deleteContact(3)"
+                      class="btn btn-circle btn-danger btn-xs"
+                      title="Delete"
+                    >
+                      <i class="glyphicon glyphicon-remove"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr id="contact4" style="display: none">
+                <td class="middle">
+                  <div class="media">
+                    <div class="col-md-2"></div>
+                    <div class="media-body">
+                      <h4 class="media-heading" id="name4">Contact 1</h4>
+                      <address id="email4">contact1@sample.com</address>
+                      <div id="phone4">1234567</div>
+                    </div>
+                  </div>
+                </td>
+                <td width="100" class="middle">
+                  <div>
+                    <a
+                      onclick="deleteContact(4)"
+                      class="btn btn-circle btn-danger btn-xs"
+                      title="Delete"
+                    >
+                      <i class="glyphicon glyphicon-remove"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr id="contact5" style="display: none">
+                <td class="middle">
+                  <div class="media">
+                    <div class="col-md-2"></div>
+                    <div class="media-body">
+                      <h4 class="media-heading" id="name5">Contact 1</h4>
+                      <address id="email5">contact1@sample.com</address>
+                      <div id="phone5">1234567</div>
+                    </div>
+                  </div>
+                </td>
+                <td width="100" class="middle">
+                  <div>
+                    <a
+                      onclick="deleteContact(5)"
+                      class="btn btn-circle btn-danger btn-xs"
+                      title="Delete"
+                    >
+                      <i class="glyphicon glyphicon-remove"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr id="contact6" style="display: none">
+                <td class="middle">
+                  <div class="media">
+                    <div class="col-md-2"></div>
+                    <div class="media-body">
+                      <h4 class="media-heading" id="name6">Contact 1</h4>
+                      <address id="email6">contact1@sample.com</address>
+                      <div id="phone6">1234567</div>
+                    </div>
+                  </div>
+                </td>
+                <td width="100" class="middle">
+                  <div>
+                    <a
+                      onclick="deleteContact(6)"
+                      class="btn btn-circle btn-danger btn-xs"
+                      title="Delete"
+                    >
+                      <i class="glyphicon glyphicon-remove"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr id="contact7" style="display: none">
+                <td class="middle">
+                  <div class="media">
+                    <div class="col-md-2"></div>
+                    <div class="media-body">
+                      <h4 class="media-heading" id="name7">Contact 1</h4>
+                      <address id="email7">contact1@sample.com</address>
+                      <div id="phone7">1234567</div>
+                    </div>
+                  </div>
+                </td>
+                <td width="100" class="middle">
+                  <div>
+                    <a
+                      onclick="deleteContact(7)"
+                      class="btn btn-circle btn-danger btn-xs"
+                      title="Delete"
+                    >
+                      <i class="glyphicon glyphicon-remove"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr id="contact8" style="display: none">
+                <td class="middle">
+                  <div class="media">
+                    <div class="col-md-2"></div>
+                    <div class="media-body">
+                      <h4 class="media-heading" id="name8">Contact 1</h4>
+                      <address id="email8">contact1@sample.com</address>
+                      <div id="phone8">1234567</div>
+                    </div>
+                  </div>
+                </td>
+                <td width="100" class="middle">
+                  <div>
+                    <a
+                      onclick="deleteContact(8)"
+                      class="btn btn-circle btn-danger btn-xs"
+                      title="Delete"
+                    >
+                      <i class="glyphicon glyphicon-remove"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr id="contact9" style="display: none">
+                <td class="middle">
+                  <div class="media">
+                    <div class="col-md-2"></div>
+                    <div class="media-body">
+                      <h4 class="media-heading" id="name9">Contact 1</h4>
+                      <address id="email9">contact1@sample.com</address>
+                      <div id="phone9">1234567</div>
+                    </div>
+                  </div>
+                </td>
+                <td width="100" class="middle">
+                  <div>
+                    <a
+                      onclick="deleteContact(9)"
+                      class="btn btn-circle btn-danger btn-xs"
+                      title="Delete"
+                    >
+                      <i class="glyphicon glyphicon-remove"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              <tr id="contact10" style="display: none">
+                <td class="middle">
+                  <div class="media">
+                    <div class="col-md-2"></div>
+                    <div class="media-body">
+                      <h4 class="media-heading" id="name10">Contact 1</h4>
+                      <address id="email10">contact1@sample.com</address>
+                      <div id="phone10">1234567</div>
+                    </div>
+                  </div>
+                </td>
+                <td width="100" class="middle">
+                  <div>
+                    <a
+                      onclick="deleteContact(10)"
+                      class="btn btn-circle btn-danger btn-xs"
+                      title="Delete"
+                    >
+                      <i class="glyphicon glyphicon-remove"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</div>
+<div id="addContactDiv" style="display: none">
+  <body>
+    <!-- navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button
+            type="button"
+            class="navbar-toggle collapsed"
+            data-toggle="collapse"
+            data-target="#navbar-collapse"
+            aria-expanded="false"
+          >
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+
+          <a
+            class="navbar-brand text-uppercase"
+            onclick="hideOrShow('loggedInDiv', true);hideOrShow('addContactDiv', false);"
+          >
+            Contech
+          </a>
+        </div>
+        <!-- /.navbar-header -->
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+          <div class="nav navbar-right navbar-btn">
+            <a href="" class="btn btn-danger" onclick="doLogout();">
+              Log Out
+            </a>
+          </div>
+          <div class="nav navbar-right navbar-btn">
+            <a class="btn btn-default" onclick="addContact()">
+              <i class="glyphicon glyphicon-plus"></i>
+              Add Contact
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- content -->
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3">
+          <!-- <div class="form-group">
+            <label for="search" class="control-label col-md-3">Search</label>
+            <div class="col-md-8">
+              <input type="text" name="search" id="searchText" class="form-control">
+            </div>
+          </div> -->
+        </div>
+
+        <div class="col-md-9">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <strong>Add Contact</strong>
+            </div>
+            <div class="panel-body">
+              <div class="form-horizontal">
+                <div class="row">
+                  <div class="col-md-8">
+                    <div class="form-group">
+                      <label for="name" class="control-label col-md-3"
+                        >Name</label
+                      >
+                      <div class="col-md-8">
+                        <input
+                          type="text"
+                          name="name"
+                          id="name"
+                          class="form-control"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="email" class="control-label col-md-3"
+                        >Email</label
+                      >
+                      <div class="col-md-8">
+                        <input
+                          type="text"
+                          name="email"
+                          id="email"
+                          class="form-control"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="phone" class="control-label col-md-3"
+                        >Phone</label
+                      >
+                      <div class="col-md-8">
+                        <input
+                          type="text"
+                          name="phone"
+                          id="phone"
+                          class="form-control"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="panel-footer">
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="row">
+                    <div class="col-md-offset-3 col-md-6">
+                      <button
+                        type="button"
+                        class="btn btn-primary"
+                        onclick="addContact()"
+                      >
+                        Save
+                      </button>
+                      <a
+                        onclick="hideOrShow('loggedInDiv', true);hideOrShow('addContactDiv', false)"
+                        class="btn btn-danger"
+                        >Cancel</a
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</div>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+<script src="js/jasny-bootstrap.min.js"></script>
+<script src="js/code.js"></script>
